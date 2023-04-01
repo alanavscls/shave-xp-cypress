@@ -1,5 +1,26 @@
 {
-  "name": "Teste",
-  "email": "teste123@gmail.com",
-  "password": "teste123"
+  "success": {
+    "name": "Teste",
+    "email": "teste123@gmail.com",
+    "password": "teste123"
+  },
+  "invpass": {
+    "email": "teste123@gmail.com",
+    "password": "teste123456"
+  },
+  "notregistred": {
+    "email": "teste404@gmail.com",
+    "password": "teste123456"
+  },
+  "shortpass": ["1", "12", "123", "1234", "12345"],
+  "invemails": [
+    "teste&gmail.com",
+    "teste.com.br",
+    "@gmail.com",
+    "@",
+    "teste@",
+    "123456789",
+    "@#!@#!#@!",
+    "xpto123"
+  ]
 }

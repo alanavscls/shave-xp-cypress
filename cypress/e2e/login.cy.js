@@ -7,18 +7,26 @@ import data from "../fixtures/users-login.json";
 describe("login", () => {
   context("quando submeto o formulário", () => {
     it.only("deve logar com sucesso", () => {
-      const user = data;
+      //dado que eu tenho um NOVO usuário cadastrado
+      const user = data.success;
 
+      cy.request({
+        method: "POST",
+        url: "http://localhost:3333/users",
+        body: user,
+      }).then(function (response) {
+        expect(response.status).to.eq(201);
+      });
+
+      //quando submeto o form de login com esse usuário
       loginPage.submit(user.email, user.password);
+
+      //então devo ser logado com sucesso
       shaversPage.header.userShouldBeLoggedIn(user.name);
     });
 
     it("Não deve logar com senha incorreta", () => {
-      const user = {
-        name: "Teste",
-        email: "teste123@gmail.com",
-        password: "teste123456",
-      };
+      const user = data.invpass;
 
       loginPage.submit(user.email, user.password);
 
@@ -29,11 +37,7 @@ describe("login", () => {
     });
 
     it("Não deve logar com email não cadastrado", () => {
-      const user = {
-        name: "Teste",
-        email: "teste404@gmail.com",
-        password: "teste123456",
-      };
+      const user = data.notregistred;
 
       loginPage.submit(user.email, user.password);
 
@@ -50,9 +54,7 @@ describe("login", () => {
   });
 
   context("senha muito curta", () => {
-    const passwords = ["1", "12", "123", "1234", "12345"];
-
-    passwords.forEach((p) => {
+    data.shortpass.forEach((p) => {
       it("não deve logar com senha " + p, () => {
         loginPage.submit("teste123@gmail.com", p);
         loginPage.alertShouldBe("Pelo menos 6 caracteres");
@@ -61,18 +63,7 @@ describe("login", () => {
   });
 
   context("email no formato incorreto", () => {
-    const emails = [
-      "teste&gmail.com",
-      "teste.com.br",
-      "@gmail.com",
-      "@",
-      "teste@",
-      "123456789",
-      "@#!@#!#@!",
-      "xpto123",
-    ];
-
-    emails.forEach((e) => {
+    data.invemails.forEach((e) => {
       it("E-mail" + e + "não é válido!", () => {
         loginPage.submit(e, "teste123");
         loginPage.alertShouldBe("Informe um email válido");
