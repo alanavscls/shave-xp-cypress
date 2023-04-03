@@ -23,3 +23,19 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add("createUser", (user) => {
+  //removendo o usuário do banco de dados
+  cy.task("removeUser", user.email).then(function (result) {
+    cy.log(result);
+  });
+
+  //realizando o cadastro de um usuário via API
+  cy.request({
+    method: "POST",
+    url: "http://localhost:3333/users",
+    body: user,
+  }).then(function (response) {
+    expect(response.status).to.eq(201);
+  });
+});
